@@ -1,0 +1,20 @@
+services:
+  api:
+    image: ${DOCKER_API_NAME}
+    restart: on-failure
+    depends_on:
+      - api-postgres
+    environment:
+      POSTGRES_HOST: "postgres"
+    links:
+      - api-postgres:postgres
+  api-postgres:
+    image: postgres
+    restart: on-failure
+    volumes:
+      - "${POSTGRES_DATA}:/opt/pgdata"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: "/opt/pgdata"
