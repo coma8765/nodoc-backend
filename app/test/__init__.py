@@ -43,7 +43,6 @@ def assert_dict(
             assert_dict(d1[k], d2[k])
         else:
             assert d1[k] == d2[k]
-               # isinstance(d2, Dict) and d2[k] or getattr(d2, k, None)
 
 
 def assert_dict_in_list(
@@ -65,7 +64,7 @@ def assert_dict_in_list(
 
 class BaseTest(IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        # setattr(dependencies, "engine", create_engine("sqlite://"))
+        setattr(dependencies, "engine", create_engine("sqlite://"))
         await dependencies.startup()
         Base.metadata.create_all(dependencies.engine)
 
