@@ -16,9 +16,12 @@ class DocType(BaseDocType):
     id: int
 
 
-class Doc(BaseModel):
+class BaseDoc(BaseModel):
     user_id: int
     type_id: int
-    user: Optional[User] = None
-    type: Optional[BaseDocType] = None
     data: Union[str, Dict[str, Any]]
+
+
+class Doc(BaseDoc):
+    user: Optional[User]
+    type: Optional[BaseDocType]

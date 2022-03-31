@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from sqlalchemy import select
@@ -7,6 +8,7 @@ from .helpers import tr
 from ..models.orgs import OrgType
 from ..models.statements import Statement, StatementType
 from ..schemas import statement_schema as ss
+from ..schemas.statement_schema import StatementStatus
 
 
 @tr
@@ -28,7 +30,7 @@ async def list_statements(user_id: int, db: Session = None) -> List[ss.Statement
 
 
 @tr
-async def list_statement_types(db: Session = None) -> List[ss.Statement]:
+async def list_statement_types(db: Session = None) -> List[ss.StatementType]:
     """List of statement types
     :type db: Session
     :return: List of statement types
@@ -101,8 +103,8 @@ async def request_statement(req_data: ss.StatementBase, db: Session = None) -> s
     :rtype: Statement
     """
 
-    o = Statement(**req_data.dict())
-    db.add(o)
+    o = Statement(**req_data.dict(exclude_none=True), status=StatementStatus.PENDING, send_time=datetime.datetime.now())
+    db.merge(o)
     db.flush()
 
     return ss.Statement.from_orm(o)

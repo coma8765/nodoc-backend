@@ -5,7 +5,7 @@ from .fixtures import org_ref, types_of_org_ref, types_of_org_obj, org_obj
 class TestUser(BaseTest):
     async def test_types_of_orgs(self):
         r1 = await types_of_org_obj()
-        r2 = await oc.get_types_of_orgs()
+        r2 = await oc.list_types_of_orgs()
 
         assert getattr(next(filter(lambda x: x.id == r1.id, r2)), "title") == r1.title
 

@@ -35,7 +35,7 @@ async def add_doc_types(type_data: ds.BaseDocType, db: Session = None) -> ds.Doc
 
 
 @tr
-async def upload_docs(docs_data: List[ds.Doc], db: Session = None) -> List[ds.Doc]:
+async def upload_docs(docs_data: List[ds.BaseDoc], db: Session = None) -> List[ds.Doc]:
     """Upload new docs
     :param docs_data: List of doc's data
     :type docs_data: List[ds.BaseDocType]
@@ -51,7 +51,6 @@ async def upload_docs(docs_data: List[ds.Doc], db: Session = None) -> List[ds.Do
         db.merge(new_docs[-1])
         db.flush()
 
-    # db.refresh()
     db.flush()
 
     return [ds.Doc.from_orm(i) for i in new_docs]
@@ -67,9 +66,8 @@ async def list_docs(user_id: int, db: Session = None) -> List[ds.Doc]:
     :return: List of org's types
     """
     res = db.execute(
-        select(Doc.type_id).
-        where(Doc.user_id == user_id).
-        selectinload(Doc.type)
+        select(Doc).
+        where(Doc.user_id == user_id)
     ).scalars().all()
 
     return [ds.Doc.from_orm(r) for r in res]

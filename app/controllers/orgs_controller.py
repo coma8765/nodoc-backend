@@ -9,7 +9,7 @@ from ..schemas import org_schema as os
 
 
 @tr
-async def get_types_of_orgs(db: Session = None) -> List[os.OrgType]:
+async def list_types_of_orgs(db: Session = None) -> List[os.OrgType]:
     """Get list of types of orgs
     :param db: Database session
     :type db: Session
@@ -45,7 +45,7 @@ async def create_type_of_orgs(title: str, db: Session = None) -> os.OrgType:
 
 
 @tr
-async def list_orgs(id: int = None, db: Session = None) -> List[os.OrgType]:
+async def list_orgs(id: int = None, db: Session = None) -> List[os.Org]:
     """List of organizations
     :param id: For find by id
     :param db: Database session
@@ -56,7 +56,8 @@ async def list_orgs(id: int = None, db: Session = None) -> List[os.OrgType]:
     """
 
     s = select(Org)
-    s = id and s.where(Org.id == id) or s
+    if id:
+        s = s.where(Org.id == id)
 
     orgs = db.execute(s).scalars().all()
 
@@ -85,4 +86,4 @@ async def create_org(title: str, type_id: int, db: Session = None) -> os.Org:
     return os.Org.from_orm(ot)
 
 
-__all__ = ["get_types_of_orgs", "create_type_of_orgs", "create_org", "list_orgs"]
+__all__ = ["list_types_of_orgs", "create_type_of_orgs", "create_org", "list_orgs"]
