@@ -6,7 +6,8 @@ class TestUser(BaseTest):
     async def test_reg(self):
         ref = user_ref()
         u = await uc.create_user(ref)
-        assert_dict(ref.dict(), u, exclude=["password"])
+        print(ref, u)
+        assert_dict(ref, u, exclude=["password"])
 
     async def test_reg_duplicate(self):
         ref = user_ref()

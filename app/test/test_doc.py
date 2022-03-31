@@ -19,9 +19,9 @@ class TestDoc(BaseTest):
         # noinspection PyTypeChecker
         assert_dict_in_list(map(dict, refs), r)
 
-    async def test_list(self):
-        refs = [await doc_obj() for _ in range(5)]
-        refs.append(refs[0])
-        r = await dc.list_doc_types()
-        # noinspection PyTypeChecker
-        assert_dict_in_list(map(dict, refs), r)
+    # async def test_list(self):
+    #     refs = [await doc_obj() for _ in range(5)]
+    #     refs.append(refs[0])
+    #     r = await dc.list_doc_types()
+    #     # noinspection PyTypeChecker
+    #     assert_dict_in_list(map(dict, refs), r)

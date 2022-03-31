@@ -38,7 +38,7 @@ async def find_by_refs(ui: List[int] = None, ue: List[str] = None, db: Session =
 
 
 @tr
-async def create_user(user_data: us.UserReg, db: Session = None):
+async def create_user(user_data: us.UserReg, db: Session = None) -> us.User:
     """User registration
     :param user_data: New user data
     :type user_data: UserReg
@@ -56,7 +56,7 @@ async def create_user(user_data: us.UserReg, db: Session = None):
     )
     db.add(user)
     db.flush()
-    return user
+    return us.User.from_orm(user)
 
 
 @tr

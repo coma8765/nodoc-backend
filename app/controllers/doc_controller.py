@@ -46,11 +46,12 @@ async def upload_docs(docs_data: List[ds.Doc], db: Session = None) -> List[ds.Do
 
     new_docs = []
     for doc_data in docs_data:
-        new_docs.append(Doc(**doc_data.dict(exclude_unset=True)))
-        db.add(new_docs[-1])
-        db.flush()
-        db.refresh(new_docs[-1])
 
+        new_docs.append(Doc(**doc_data.dict(exclude_unset=True)))
+        db.merge(new_docs[-1])
+        db.flush()
+
+    # db.refresh()
     db.flush()
 
     return [ds.Doc.from_orm(i) for i in new_docs]

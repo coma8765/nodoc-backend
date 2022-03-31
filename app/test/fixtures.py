@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from . import us, uc, ds, os, oc, dc
+from . import us, uc, ds, os, oc, dc, ss, sc
 from datetime import datetime
 from random import randint
 
@@ -37,8 +37,8 @@ async def doc_ref() -> ds.Doc:
 
     return ds.Doc(
         user_id=(await user_obj()).id,
-        type_id=0,
-        data="data"
+        type_id=(await doc_type_obj()).id,
+        data=f"data-{r}"
     )
 
 
@@ -50,6 +50,10 @@ def org_ref() -> str:
     return f"org-type-{randint(1000, 9999)}"
 
 
+async def org_obj() -> os.Org:
+    return await oc.create_org(org_ref(), (await types_of_org_obj()).id)
+
+
 def types_of_org_ref() -> str:
     return f"org-type-{randint(1000, 9999)}"
 
@@ -58,5 +62,27 @@ async def types_of_org_obj() -> os.OrgType:
     return await oc.create_type_of_orgs(types_of_org_ref())
 
 
-async def org_obj() -> os.Org:
-    return await oc.create_org(org_ref(), (await types_of_org_obj()).id)
+def statement_type_ref() -> ss.StatementTypeBase:
+    r = f"test-{randint(100000, 999999)}"
+    return ss.StatementTypeBase(
+        title=r,
+        description=f"desc-{r}",
+        structure=f"structure-{r}",
+        icon_id=f"icon-{r}"
+    )
+
+
+async def statement_type_obj() -> ss.StatementType:
+    return await sc.create_statement_type(statement_type_ref())
+
+
+async def statement_ref(user_id=None, org_id=None, type_id=None) -> ss.StatementBase:
+    return ss.StatementBase(
+        user_id=user_id or (await user_obj()).id,
+        org_id=org_id or (await org_obj()).id,
+        type_id=type_id or (await statement_type_obj()).id
+    )
+
+
+async def statement_obj(user_id=None, org_id=None, type_id=None) -> ss.Statement:
+    return await sc.request_statement(await statement_ref(user_id, org_id, type_id))
